@@ -66,6 +66,7 @@ public class StateMachine
     private void transitionToNewState(State toState)
     {
         //ToDo: deadlock hazard if one of the action methods causes another trigger.
+        //ToDo: What happens if 2 triggers occur simultaneously on different threads?
         synchronized (transitionLock)
         {
             if (currentState != null)

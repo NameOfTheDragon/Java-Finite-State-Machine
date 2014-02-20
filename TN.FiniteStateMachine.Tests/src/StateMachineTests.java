@@ -11,6 +11,8 @@ import org.junit.Test;
  Initial state can only be set once
  OnExit should be called on leaving any state
  OnEnter should be called on entering any state
+ OnExit action should not deadlock if it triggers another transition
+ Two or more simultaneous triggers should result in only one transition.
 */
 
 public class StateMachineTests
