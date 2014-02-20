@@ -8,20 +8,18 @@ public class TurnstyleStateMachineDemo
 
     private void composeStateMachine()
     {
-         State stateLocked = new State("Locked");
-         State stateUnlocked = new State("Unlocked");
+        StateMachine.State stateLocked = machine.new State("Locked");
+        StateMachine.State stateUnlocked = machine.new State("Unlocked");
 
-         StateMachine.StateTransition transitionUnlockedToLocked = machine.new StateTransition(stateLocked);
-         StateMachine.StateTransition transitionLockedToUnlocked = machine.new StateTransition(stateUnlocked,
-         new TriggerRule()
+        StateMachine.State.StateTransition transitionUnlockedToLocked = stateLocked.new StateTransition(stateLocked);
+        StateMachine.State.StateTransition transitionLockedToUnlocked = stateUnlocked.new StateTransition(stateUnlocked,
+                new TriggerRule()
                 {
                     @Override
-                    public boolean triggerIsAllowed()
+                    public boolean transitionIsAllowed()
                     {
                         return (moneyInserted >= 20);
                     }
                 });
-        stateLocked.addTransition(transitionLockedToUnlocked);
-        stateUnlocked.addTransition(transitionUnlockedToLocked);
     }
 }
