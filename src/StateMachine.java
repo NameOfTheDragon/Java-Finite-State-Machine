@@ -38,8 +38,9 @@ import java.awt.event.ActionListener;
  */
 public class StateMachine
 {
+    private final State hiddenStateWithNoTransitions = new State("State Machine Paused");
     private final Object transitionLock = new Object();   // protects against simultaneous transitions
-    private State currentState;
+    private volatile State currentState = hiddenStateWithNoTransitions;
 
     public State getCurrentState()
     {
@@ -48,11 +49,24 @@ public class StateMachine
 
     /**
      * Sets the initial state and starts the state machine.
+     * Each instance must be started exactly once.
+     * <p/>
+     * Until the machine is started, all transitions and triggers
+     * will be inoperative and the state machine will not function.
+     * <p/>
+     * Any subsequent calls result in a FalseStartException, and the
+     * state machine will remain unaffected. If the state machine
+     * needs to be restarted for any reason, then it must be
+     * destroyed and re-created.
      *
      * @param initialState The initial state for the state machine.
+     * @throws FalseStartException Thrown if the start() method is
+     *                             called more than once on an instance.
      */
-    public void start(State initialState)
+    public void start(State initialState) throws FalseStartException
     {
+        if (currentState != hiddenStateWithNoTransitions)
+            throw new FalseStartException();
         this.currentState = initialState;
     }
 
@@ -60,18 +74,33 @@ public class StateMachine
      * Transitions the state machine to a new state, invoking the OnExit action
      * on the old state and the OnEnter action on the new state on the way.
      * Ensures thread safety by only allowing a single transition to be in progress.
+     * <p/>
+     * Exceptions within the OnEnter and OnExit action methods are not caught,
+     * but we do guarantee that once the transition starts, it will complete
+     * with the state machine in toState.
      *
-     * @param toState the new state
+     * @param fromState The state that the transition is associated with
+     * @param toState   The destination state (the new current state).
      */
-    private void transitionToNewState(State toState)
+    private void transitionToNewState(State fromState, State toState)
     {
-        //ToDo: deadlock hazard if one of the action methods causes another trigger.
-        //ToDo: What happens if 2 triggers occur simultaneously on different threads?
         synchronized (transitionLock)
         {
-            if (currentState != null)
-                currentState.onExit.action();
-            currentState = toState;
+            // Avoid the race condition where currentState has changed since the transition started.
+            if (fromState != currentState)
+                return;
+            // The state machine temporarily goes into a private state so that
+            // all transitions are rendered invalid (except the one in progress).
+
+            currentState = hiddenStateWithNoTransitions;
+            try
+            {
+                if (fromState != null)
+                    fromState.onExit.action();
+            } finally
+            {
+                currentState = toState;
+            }
             toState.onEnter.action();
         }
     }
@@ -191,7 +220,7 @@ public class StateMachine
                 }
 
                 if (rule.transitionIsAllowed())
-                    StateMachine.this.transitionToNewState(destinationState);
+                    StateMachine.this.transitionToNewState(State.this, destinationState);
             }
 
             /**

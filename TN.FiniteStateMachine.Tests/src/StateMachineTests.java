@@ -5,14 +5,14 @@ import org.junit.Test;
  */
 
 /*
- ToDo
-
- Transitions should only be actioned if the state machine is in the correct state
- Initial state can only be set once
+ToDo:
  OnExit should be called on leaving any state
  OnEnter should be called on entering any state
  OnExit action should not deadlock if it triggers another transition
  Two or more simultaneous triggers should result in only one transition.
+ Once a transition starts, it should always finish in the destination state regardless of any exceptions in OnEnter and OnExit action methods.
+ Triggers called from within the OnExit method should always be ignored.
+
 */
 
 public class StateMachineTests
@@ -41,11 +41,11 @@ public class StateMachineTests
                 return false;
             }
         });
-        assert ! transition.rule.transitionIsAllowed();
+        assert !transition.rule.transitionIsAllowed();
     }
 
     @Test
-    public void TransitionShouldBeAllowedWhenRuleCriteriaAreMet()
+    public void TransitionShouldBeAllowedWhenRuleCriteriaAreMet() throws FalseStartException
     {
         triggerVariable = 10;
         StateMachine machine = new StateMachine();
@@ -66,7 +66,7 @@ public class StateMachineTests
     }
 
     @Test
-    public void TransitionShouldNotHappendWhenRuleCriteriaAreNotMet()
+    public void TransitionShouldNotHappendWhenRuleCriteriaAreNotMet() throws FalseStartException
     {
         triggerVariable = 9;
         StateMachine machine = new StateMachine();
@@ -84,5 +84,36 @@ public class StateMachineTests
         machine.start(initialState);
         transition.trigger();
         assert machine.getCurrentState() == initialState;
+    }
+
+    @Test
+    public void TransitionsShouldOnlyHappenIfTheStateMachineIsInTheCorrectState() throws FalseStartException
+    {
+        StateMachine machine = new StateMachine();
+        final StateMachine.State initialState = machine.new State("Start");
+        final StateMachine.State middleState = machine.new State("middle");
+        final StateMachine.State finalState = machine.new State("Finish");
+        final StateMachine.State.Transition transitionInitialToMiddle = initialState.new Transition(middleState);
+        StateMachine.State.Transition transitionMiddleToFinal = middleState.new Transition(finalState);
+        StateMachine.State.Transition transitionMiddleToStart = middleState.new Transition(initialState);
+        machine.start(initialState);
+        transitionMiddleToFinal.trigger();    // invalid
+        assert machine.getCurrentState() == initialState;
+        transitionInitialToMiddle.trigger();   // ok
+        assert machine.getCurrentState() == middleState;
+        transitionMiddleToFinal.trigger();  // ok
+        assert machine.getCurrentState() == finalState;
+    }
+
+    @Test(expected = FalseStartException.class)
+    public void InitialStateCanOnlyBeSetOnce() throws FalseStartException
+    {
+        StateMachine machine = new StateMachine();
+        final StateMachine.State initialState = machine.new State("Start");
+        assert machine.getCurrentState() != initialState;
+        machine.start(initialState);
+        assert machine.getCurrentState() == initialState;
+        machine.start(initialState);    // should throw
+
     }
 }
