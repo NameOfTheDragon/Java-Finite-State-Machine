@@ -26,6 +26,12 @@ public class StateMachine
 {
     private State currentState;
 
+    public State getCurrentState()
+    {
+        return currentState;
+    }
+
+
     public class StateTransition implements ActionListener
     {
         public StateTransition(State destinationState, TriggerRule allowRule)
@@ -55,10 +61,11 @@ public class StateMachine
             }
         };
 
-        public State destinationState;
+        private State destinationState;
 
         public void trigger()
         {
+            //ToDo What if the transition is triggered while we are in a different state?
             if (rule.triggerIsAllowed())
                 StateMachine.this.transitionToNewState(StateMachine.this.currentState, destinationState);
         }
@@ -79,7 +86,8 @@ public class StateMachine
      */
     private void transitionToNewState(State fromState, State toState)
     {
-        fromState.onExit.action();
+        if (fromState != null)
+            fromState.onExit.action();
         this.currentState = toState;
         toState.onEnter.action();
     }

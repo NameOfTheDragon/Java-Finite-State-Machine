@@ -31,7 +31,6 @@ public class State
         this.name = name;
     }
 
-
     public void addTransition(StateMachine.StateTransition transition)
     {
         this.stateTransitions.add(transition);

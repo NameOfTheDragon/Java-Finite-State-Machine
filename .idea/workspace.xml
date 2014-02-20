@@ -70,21 +70,23 @@
             <file leaf-file-name="StateMachine.java" pinned="false" current="false" current-in-tab="false">
               <entry file="file://$PROJECT_DIR$/src/StateMachine.java">
                 <provider selected="true" editor-type-id="text-editor">
-                  <state line="33" column="84" selection-start="942" selection-end="942" vertical-scroll-proportion="0.0" vertical-offset="697" max-vertical-offset="2392">
+                  <state line="63" column="39" selection-start="1692" selection-end="1692" vertical-scroll-proportion="0.0" vertical-offset="505" max-vertical-offset="2600">
                     <folding>
                       <element signature="n#!!doc" expanded="true" />
                       <element signature="imports" expanded="true" />
-                      <element signature="e#1410#1572#0" expanded="true" />
-                      <element signature="e#1561#1562#0" expanded="true" />
+                      <element signature="e#702#703#0" expanded="true" />
+                      <element signature="e#737#738#0" expanded="true" />
+                      <element signature="e#1488#1650#0" expanded="true" />
+                      <element signature="e#1639#1640#0" expanded="true" />
                     </folding>
                   </state>
                 </provider>
               </entry>
             </file>
-            <file leaf-file-name="State.java" pinned="false" current="false" current-in-tab="false">
+            <file leaf-file-name="State.java" pinned="false" current="true" current-in-tab="true">
               <entry file="file://$PROJECT_DIR$/src/State.java">
                 <provider selected="true" editor-type-id="text-editor">
-                  <state line="36" column="46" selection-start="846" selection-end="846" vertical-scroll-proportion="0.0" vertical-offset="245" max-vertical-offset="1196">
+                  <state line="37" column="1" selection-start="91" selection-end="853" vertical-scroll-proportion="0.8808706" vertical-offset="193" max-vertical-offset="1170">
                     <folding>
                       <element signature="imports" expanded="true" />
                       <element signature="e#300#330#0" expanded="true" />
@@ -107,20 +109,24 @@
             <file leaf-file-name="StateMachineTests.java" pinned="false" current="false" current-in-tab="false">
               <entry file="file://$PROJECT_DIR$/TN.FiniteStateMachine.Tests/src/StateMachineTests.java">
                 <provider selected="true" editor-type-id="text-editor">
-                  <state line="39" column="70" selection-start="1229" selection-end="1229" vertical-scroll-proportion="0.0" vertical-offset="375" max-vertical-offset="1248">
+                  <state line="11" column="57" selection-start="212" selection-end="212" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2418">
                     <folding>
                       <element signature="imports" expanded="true" />
-                      <element signature="e#721#884#0" expanded="true" />
-                      <element signature="e#873#874#0" expanded="true" />
+                      <element signature="e#882#1045#0" expanded="true" />
+                      <element signature="e#1034#1035#0" expanded="true" />
+                      <element signature="e#1664#1908#0" expanded="true" />
+                      <element signature="e#1897#1898#0" expanded="true" />
+                      <element signature="e#2258#2502#0" expanded="true" />
+                      <element signature="e#2491#2492#0" expanded="true" />
                     </folding>
                   </state>
                 </provider>
               </entry>
             </file>
-            <file leaf-file-name="TurnstyleStateMachineDemo.java" pinned="false" current="true" current-in-tab="true">
+            <file leaf-file-name="TurnstyleStateMachineDemo.java" pinned="false" current="false" current-in-tab="false">
               <entry file="file://$PROJECT_DIR$/src/TurnstyleStateMachineDemo.java">
                 <provider selected="true" editor-type-id="text-editor">
-                  <state line="24" column="62" selection-start="904" selection-end="904" vertical-scroll-proportion="0.71477664" vertical-offset="0" max-vertical-offset="873">
+                  <state line="22" column="19" selection-start="422" selection-end="778" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="858">
                     <folding>
                       <element signature="e#541#776#0" expanded="true" />
                       <element signature="e#757#758#0" expanded="true" />
@@ -165,11 +171,11 @@
         <option value="$PROJECT_DIR$/src/StateTransition.java" />
         <option value="$PROJECT_DIR$/src/StateTransitionTriggerListener.java" />
         <option value="$PROJECT_DIR$/src/TriggerListener.java" />
-        <option value="$PROJECT_DIR$/TN.FiniteStateMachine.Tests/src/StateMachineTests.java" />
-        <option value="$PROJECT_DIR$/src/StateMachine.java" />
-        <option value="$PROJECT_DIR$/src/State.java" />
         <option value="$PROJECT_DIR$/src/TriggerRule.java" />
         <option value="$PROJECT_DIR$/src/TurnstyleStateMachineDemo.java" />
+        <option value="$PROJECT_DIR$/src/StateMachine.java" />
+        <option value="$PROJECT_DIR$/TN.FiniteStateMachine.Tests/src/StateMachineTests.java" />
+        <option value="$PROJECT_DIR$/src/State.java" />
       </list>
     </option>
   </component>
@@ -609,15 +615,15 @@
       <changelist id="e1a6a32b-84b2-4ea5-8744-ae2818786754" name="Default" comment="" />
       <created>1392844625225</created>
       <updated>1392844625225</updated>
-      <workItem from="1392844633823" duration="20079000" />
+      <workItem from="1392844633823" duration="21745000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="20079000" />
+    <option name="totallyTimeSpent" value="21745000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1296" height="1000" extended-state="7" />
+    <frame x="-8" y="-8" width="1296" height="1000" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
@@ -641,8 +647,8 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24959612" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32988507" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24959612" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32988507" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Sequence" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -706,45 +712,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/TN.FiniteStateMachine.Tests/src/StateMachineTests.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="39" column="70" selection-start="1229" selection-end="1229" vertical-scroll-proportion="0.0" vertical-offset="375" max-vertical-offset="1248">
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#721#884#0" expanded="true" />
-            <element signature="e#873#874#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/StateMachine.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="33" column="84" selection-start="942" selection-end="942" vertical-scroll-proportion="0.0" vertical-offset="697" max-vertical-offset="2392">
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-            <element signature="imports" expanded="true" />
-            <element signature="e#1410#1572#0" expanded="true" />
-            <element signature="e#1561#1562#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.7.0_51/src.zip!/java/util/List.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="108" column="17" selection-start="4208" selection-end="4208" vertical-scroll-proportion="0.5090293" vertical-offset="1759" max-vertical-offset="15158">
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/State.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="46" selection-start="846" selection-end="846" vertical-scroll-proportion="0.0" vertical-offset="245" max-vertical-offset="1196">
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#300#330#0" expanded="true" />
-            <element signature="e#363#364#0" expanded="true" />
-            <element signature="e#378#379#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -757,10 +728,51 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/TurnstyleStateMachineDemo.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="24" column="62" selection-start="904" selection-end="904" vertical-scroll-proportion="0.71477664" vertical-offset="0" max-vertical-offset="873">
+        <state line="22" column="19" selection-start="422" selection-end="778" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="858">
           <folding>
             <element signature="e#541#776#0" expanded="true" />
             <element signature="e#757#758#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TN.FiniteStateMachine.Tests/src/StateMachineTests.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="11" column="57" selection-start="212" selection-end="212" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2418">
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#882#1045#0" expanded="true" />
+            <element signature="e#1034#1035#0" expanded="true" />
+            <element signature="e#1664#1908#0" expanded="true" />
+            <element signature="e#1897#1898#0" expanded="true" />
+            <element signature="e#2258#2502#0" expanded="true" />
+            <element signature="e#2491#2492#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/StateMachine.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="63" column="39" selection-start="1692" selection-end="1692" vertical-scroll-proportion="0.0" vertical-offset="1285" max-vertical-offset="2600">
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+            <element signature="imports" expanded="true" />
+            <element signature="e#702#703#0" expanded="true" />
+            <element signature="e#737#738#0" expanded="true" />
+            <element signature="e#1488#1650#0" expanded="true" />
+            <element signature="e#1639#1640#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/State.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="37" column="1" selection-start="91" selection-end="853" vertical-scroll-proportion="0.8808706" vertical-offset="193" max-vertical-offset="1170">
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#300#330#0" expanded="true" />
+            <element signature="e#363#364#0" expanded="true" />
+            <element signature="e#378#379#0" expanded="true" />
           </folding>
         </state>
       </provider>
