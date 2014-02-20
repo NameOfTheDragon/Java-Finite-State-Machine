@@ -4,26 +4,38 @@
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
- * State: what does it do:
- * 1. Provides an OnEnter action
- * 2. Provides an OnExit action
- * 3. Defines a list of transitions, each of which has:
- * a) a trigger (method?)
- * b) an action
- * c) destination state
+ * A flexible, general purpose Finite State Machine.
  * <p/>
- * What is a trigger?
- * - it is an event listener that provides input stimulus
- * to the state machine.
- * - It provides a method, isTriggerValid(), that determines
- * whether the trigger is valid at that time. Default implementation
- * is to return true.
+ * Wikipedia: A finite-state machine (FSM) or finite-state automaton
+ * (plural: automata), or simply a state machine, is a mathematical
+ * model of computation used to design both computer programs and
+ * sequential logic circuits. It is conceived as an abstract machine
+ * that can be in one of a finite number of states. The machine is in
+ * only one state at a time; the state it is in at any given time is
+ * called the current state. It can change from one state to another
+ * when initiated by a triggering event or condition; this is called
+ * a transition. A particular FSM is defined by a list of its states,
+ * and the triggering condition for each transition.
+ * <p/>
+ * This implementation, in addition to modelling the state of a system
+ * over time, allows actions to be associated with state transitions.
+ * This is achieved via the OnEnter and OnExit actions defined by
+ * each state. Actions are no-ops by default but can be overridden to
+ * provide whatever logic is desired.
+ * <p/>
+ * Transitions are triggered by calling the trigger() instance method;
+ * transitions also implement the @link ActionListener interface so that
+ * they can be conveniently used in user interfaces. A transition may be
+ * triggered at any time (and triggering is thread-safe), but in order
+ * to cause a state transition several conditions conditions must be
+ * met: the state that the transition rule is associated with must be
+ * the state machine's current state; then the transition's validation
+ * rule must return true. The default validation action is to simply
+ * return true, but this can be overridden as needed to perform
+ * arbitrary validation logic.
  */
-
 public class StateMachine
 {
     private final Object transitionLock = new Object();   // protects against simultaneous transitions
@@ -36,11 +48,31 @@ public class StateMachine
 
     /**
      * Sets the initial state and starts the state machine.
+     *
      * @param initialState The initial state for the state machine.
      */
     public void start(State initialState)
     {
         this.currentState = initialState;
+    }
+
+    /**
+     * Transitions the state machine to a new state, invoking the OnExit action
+     * on the old state and the OnEnter action on the new state on the way.
+     * Ensures thread safety by only allowing a single transition to be in progress.
+     *
+     * @param toState the new state
+     */
+    private void transitionToNewState(State toState)
+    {
+        //ToDo: deadlock hazard if one of the action methods causes another trigger.
+        synchronized (transitionLock)
+        {
+            if (currentState != null)
+                currentState.onExit.action();
+            currentState = toState;
+            toState.onEnter.action();
+        }
     }
 
     /**
@@ -50,7 +82,38 @@ public class StateMachine
     {
 
         private final String name;
-        private final List<StateTransition> stateTransitions = new ArrayList<StateTransition>();
+        /**
+         * The OnEnter action for the state, with a default null implementation.
+         * Can be overridden to provide a custom OnEnter action.
+         */
+        protected StateTransitionAction onEnter = new StateTransitionAction()
+        {
+            @Override
+            public void action()
+            {
+            }
+        };
+        /**
+         * The OnExit action for the state, with default null implementation.
+         * Can be overridden to provide a custom OnExit action.
+         */
+        protected StateTransitionAction onExit = new StateTransitionAction()
+        {
+            @Override
+            public void action()
+            {
+            }
+        };
+
+        /**
+         * Constructs a new State instance with the specified name.
+         *
+         * @param name The descriptive name of the state.
+         */
+        public State(String name)
+        {
+            this.name = name;
+        }
 
         /**
          * Gets the descriptive name of the current state.
@@ -61,32 +124,6 @@ public class StateMachine
         }
 
         /**
-         * The OnEnter action for the state, with a default null implementation.
-         * Can be overridden to provide a custom OnEnter action.
-         */
-        protected StateTransitionAction onEnter = new StateTransitionAction()
-        {
-            @Override public void action() {}
-        };
-        /**
-         * The OnExit action for the state, with default null implementation.
-         * Can be overridden to provide a custom OnExit action.
-         */
-        protected StateTransitionAction onExit = new StateTransitionAction()
-        {
-            @Override public void action() {}
-        };
-
-        /**
-         * Constructs a new State instance with the specified name.
-         * @param name The descriptive name of the state.
-         */
-        public State(String name)
-        {
-            this.name = name;
-        }
-
-        /**
          * Represents a transition to another state and a method of triggering
          * the transition, plus a rule for validating whether the transition
          * is currently allowed. For the transition to occur, it must be triggered;
@@ -94,39 +131,9 @@ public class StateMachine
          * and the transition validation rule must be met; otherwise the trigger
          * is ignored.
          */
-        public class StateTransition implements ActionListener
+        public class Transition implements ActionListener
         {
-            /**
-             * Creates a state transition to the specified state
-             * and supplies a validation rule that must be met before the
-             * transition can occur.
-             * @param destinationState The new state after the transition has completed.
-             * @param allowRule The conditions that must be met before the transition can occur.
-             */
-            public StateTransition(State destinationState, TriggerRule allowRule)
-            {
-                if (destinationState == null)
-                    throw new IllegalArgumentException("Destination state is required");
-                this.destinationState = destinationState;
-                if (allowRule != null)
-                {
-                    this.rule = allowRule;
-                }
-            }
-
-            /**
-             * Creates a state transition to the specified state and uses the
-             * default validation rule, which always allows the transition.
-             * @param destinationState The new state after the transition has completed.
-             */
-            public StateTransition(State destinationState)
-            {
-                this(destinationState, null);
-            }
-
-            // isTriggerValid should be overridden to provide a validation rule.
-            // This default implementation allows all triggers by default.
-            public TriggerRule rule = new TriggerRule()
+            TransitionRule rule = new TransitionRule()
             {
                 @Override
                 public boolean transitionIsAllowed()
@@ -134,9 +141,45 @@ public class StateMachine
                     return true;
                 }
             };
-
             private State destinationState;
 
+            /**
+             * Represents a transition to another state and the
+             * validation rule that must be satisfied before the
+             * transition can occur.
+             *
+             * @param destinationState The destination state of the transition.
+             * @param rule             The validation rule that must be satisfied
+             *                         for the transition to occur. If this argument is null,
+             *                         then the default rule (which always succeeds) is used.
+             */
+            public Transition(State destinationState, TransitionRule rule)
+            {
+                if (destinationState == null)
+                    throw new IllegalArgumentException("Destination state is required");
+                this.destinationState = destinationState;
+                if (rule != null)
+                {
+                    this.rule = rule;
+                }
+            }
+
+            /**
+             * Creates a state transition to the specified state and uses the
+             * default validation rule, which always succeeds.
+             *
+             * @param destinationState The new state after the transition has completed.
+             */
+            public Transition(State destinationState)
+            {
+                this(destinationState, null);
+            }
+
+            /**
+             * Triggers the state transition, provided that the validation
+             * rule succeeds and the owning state is the current state;
+             * otherwise the trigger is silently ignored.
+             */
             public void trigger()
             {
                 // Triggers are only valid if the state machine is in the correct state, otherwise they are ignored.
@@ -150,30 +193,18 @@ public class StateMachine
                     StateMachine.this.transitionToNewState(destinationState);
             }
 
+            /**
+             * Default implementation for the ActionListener is to trigger
+             * the state transition. If this is overridden, then the overriding class
+             * must call trigger() manually.
+             *
+             * @param e ActionEvent arguments.
+             */
             @Override
             public void actionPerformed(ActionEvent e)
             {
                 this.trigger();
             }
-        }
-
-    }
-
-    /**
-     * Transitions the state machine to a new state, calling the onExit action
-     * on the old state and the onEnter action on the new state. Ensures thread safety
-     * by only allowing a single transition to be in progress.
-     *
-     * @param toState the new state
-     */
-    private void transitionToNewState(State toState)
-    {
-        synchronized (transitionLock)
-        {
-            if (currentState != null)
-                currentState.onExit.action();
-            currentState = toState;
-            toState.onEnter.action();
         }
     }
 }

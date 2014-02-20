@@ -9,6 +9,8 @@ import org.junit.Test;
 
  Transitions should only be actioned if the state machine is in the correct state
  Initial state can only be set once
+ OnExit should be called on leaving any state
+ OnEnter should be called on entering any state
 */
 
 public class StateMachineTests
@@ -20,7 +22,7 @@ public class StateMachineTests
     {
         final StateMachine machine = new StateMachine();
         final StateMachine.State stateTest = machine.new State("Unit test");
-        final StateMachine.State.StateTransition transition = stateTest.new StateTransition(stateTest);
+        final StateMachine.State.Transition transition = stateTest.new Transition(stateTest);
         assert transition.rule.transitionIsAllowed();
     }
 
@@ -29,7 +31,7 @@ public class StateMachineTests
     {
         final StateMachine machine = new StateMachine();
         final StateMachine.State state = machine.new State("Unit test");
-        final StateMachine.State.StateTransition transition = state.new StateTransition(state, new TriggerRule()
+        final StateMachine.State.Transition transition = state.new Transition(state, new TransitionRule()
         {
             @Override
             public boolean transitionIsAllowed()
@@ -47,7 +49,7 @@ public class StateMachineTests
         StateMachine machine = new StateMachine();
         final StateMachine.State initialState = machine.new State("Start");
         final StateMachine.State finalState = machine.new State("Unit test");
-        StateMachine.State.StateTransition transition = initialState.new StateTransition(finalState, new TriggerRule()
+        StateMachine.State.Transition transition = initialState.new Transition(finalState, new TransitionRule()
         {
             @Override
             public boolean transitionIsAllowed()
@@ -68,7 +70,7 @@ public class StateMachineTests
         StateMachine machine = new StateMachine();
         final StateMachine.State initialState = machine.new State("Start");
         final StateMachine.State finalState = machine.new State("Unit test");
-        StateMachine.State.StateTransition transition = initialState.new StateTransition(finalState, new TriggerRule()
+        StateMachine.State.Transition transition = initialState.new Transition(finalState, new TransitionRule()
         {
             @Override
             public boolean transitionIsAllowed()

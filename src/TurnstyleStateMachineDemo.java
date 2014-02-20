@@ -11,9 +11,9 @@ public class TurnstyleStateMachineDemo
         StateMachine.State stateLocked = machine.new State("Locked");
         StateMachine.State stateUnlocked = machine.new State("Unlocked");
 
-        StateMachine.State.StateTransition transitionUnlockedToLocked = stateLocked.new StateTransition(stateLocked);
-        StateMachine.State.StateTransition transitionLockedToUnlocked = stateUnlocked.new StateTransition(stateUnlocked,
-                new TriggerRule()
+        StateMachine.State.Transition transitionUnlockedToLocked = stateLocked.new Transition(stateLocked);
+        StateMachine.State.Transition transitionLockedToUnlocked = stateUnlocked.new Transition(stateUnlocked,
+                new TransitionRule()
                 {
                     @Override
                     public boolean transitionIsAllowed()
