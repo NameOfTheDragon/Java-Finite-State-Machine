@@ -50,7 +50,7 @@ public class JavaConsole extends WindowAdapter implements WindowListener, Action
         textArea.setBackground(Color.black); //DWM 02-07-2012
         textArea.setForeground(Color.white); //DWM 02-07-2012
         textArea.setCaretColor(textArea.getForeground()); //DWM 02-07-2012
-        textArea.setFont(new Font("Lucida Sans", Font.BOLD, 14)); //DWM 02-07-2012
+        textArea.setFont(new Font("Lucida Console", Font.PLAIN, 16)); //TPL
         textArea.setLineWrap(true); //DWM 02-07-2012
         textArea.setWrapStyleWord(true); //DWM 02-07-2012
         textArea.setEditable(true); //DWM 02-07-2012

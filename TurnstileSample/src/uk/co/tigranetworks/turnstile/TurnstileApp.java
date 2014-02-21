@@ -118,18 +118,19 @@ public class TurnstileApp implements TraceListener
         };
 
         // State definitions
-        StateMachine.State stateUnlocked = turnstile.new State("Unlocked", onEnterUnlocked, null);
-        StateMachine.State stateLocked = turnstile.new State("Locked", onEnterLocked, null);
+        StateMachine.State stateUnlocked = turnstile.new State("Gate Unlocked", onEnterUnlocked, null);
+        StateMachine.State stateLocked = turnstile.new State("Gate Locked", onEnterLocked, null);
 
         // Transition validation rules
-        transitionRuleLockedToUnlocked = new TransitionRule()
-        {
-            @Override
-            public boolean transitionIsAllowed()
-            {
-                return (moneyInCoinValidator >= 20);
-            }
-        };
+        transitionRuleLockedToUnlocked =
+                new TransitionRule()
+                {
+                    @Override
+                    public boolean transitionIsAllowed()
+                    {
+                        return (moneyInCoinValidator >= 20);
+                    }
+                };
 
         // State transitions
         transitionUnlockedToLocked = stateUnlocked.new Transition(stateLocked);
@@ -139,7 +140,7 @@ public class TurnstileApp implements TraceListener
         turnstile.setOnStateChangedListener(this);
         turnstile.setOnTriggerListener(this);
 
-        // Start the state machine.
+        // Start the state machine and set the initial state to Locked.
         try
         {
             turnstile.start(stateLocked);
