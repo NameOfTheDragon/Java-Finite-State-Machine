@@ -1,4 +1,7 @@
 import org.junit.Test;
+import uk.co.tigranetworks.FalseStartException;
+import uk.co.tigranetworks.StateMachine;
+import uk.co.tigranetworks.TransitionRule;
 
 /**
  * Created by Tim on 20/02/14.
@@ -114,6 +117,5 @@ public class StateMachineTests
         machine.start(initialState);
         assert machine.getCurrentState() == initialState;
         machine.start(initialState);    // should throw
-
     }
 }

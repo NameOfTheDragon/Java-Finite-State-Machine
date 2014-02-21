@@ -1,4 +1,4 @@
-/**
+package uk.co.tigranetworks; /**
  * Created by Tim on 19/02/14.
  */
 
@@ -38,9 +38,13 @@ import java.awt.event.ActionListener;
  */
 public class StateMachine
 {
-    private final State hiddenStateWithNoTransitions = new State("State Machine Paused");
-    private final Object transitionLock = new Object();   // protects against simultaneous transitions
-    private volatile State currentState = hiddenStateWithNoTransitions;
+    private final    State  hiddenStateWithNoTransitions = new State("State Machine Paused");
+    private volatile State  currentState                 = hiddenStateWithNoTransitions;
+    private final    Object transitionLock               = new Object();   // protects against simultaneous transitions
+
+    // Event sources that produce information about the inner workings of the state machine.
+    private TraceListener onStateChanged;
+    private TraceListener onTrigger;
 
     public State getCurrentState()
     {
@@ -54,7 +58,7 @@ public class StateMachine
      * Until the machine is started, all transitions and triggers
      * will be inoperative and the state machine will not function.
      * <p/>
-     * Any subsequent calls result in a FalseStartException, and the
+     * Any subsequent calls result in a uk.co.tigranetworks.FalseStartException, and the
      * state machine will remain unaffected. If the state machine
      * needs to be restarted for any reason, then it must be
      * destroyed and re-created.
@@ -67,7 +71,7 @@ public class StateMachine
     {
         if (currentState != hiddenStateWithNoTransitions)
             throw new FalseStartException();
-        this.currentState = initialState;
+        transitionToNewState(hiddenStateWithNoTransitions, initialState);
     }
 
     /**
@@ -97,12 +101,92 @@ public class StateMachine
             {
                 if (fromState != null)
                     fromState.onExit.action();
-            } finally
+            }
+            finally
             {
                 currentState = toState;
+                raiseOnStateChanged(fromState.getName(), toState.getName());
             }
             toState.onEnter.action();
         }
+    }
+
+    /**
+     * Fires the specified trance event and provides the descriptive text
+     * to the listener.
+     *
+     * @param listener    The event being raised
+     * @param description Trace output text.
+     */
+    private void raiseTraceEvent(TraceListener listener, String description)
+    {
+        try
+        {
+            if (listener != null)
+            {
+                listener.trace(description);
+            }
+        }
+        catch (Exception ex)
+        {
+            // Trace is not allowed to throw any exceptions.
+        }
+    }
+
+    /**
+     * Raises the OnStateChanged trace event.
+     *
+     * @param fromState The name of the original state.
+     * @param toState   The name of the destination state.
+     */
+    protected void raiseOnStateChanged(String fromState, String toState)
+    {
+        try
+        {
+            String description = String.format("State transition [%s]->[%s]", fromState, toState);
+            raiseTraceEvent(onStateChanged, description);
+        }
+        catch (Exception ex)
+        {
+        }
+    }
+
+    /**
+     * Raises the OnTrigger trace event.
+     *
+     * @param fromState The name of the original state.
+     * @param toState   The name of the destination state.
+     */
+    protected void raiseOnTrigger(String fromState, String toState, String outcome)
+    {
+        try
+        {
+            String description = String.format("Triggered transition from [%s] to [%s] outcome: %s", fromState, toState, outcome);
+            raiseTraceEvent(onTrigger, description);
+        }
+        catch (Exception ex)
+        {
+        }
+    }
+
+    /**
+     * Sets a listener for the OnStateChanged event.
+     *
+     * @param listener The listener. There can be only one.
+     */
+    public void setOnStateChangedListener(TraceListener listener)
+    {
+        onStateChanged = listener;
+    }
+
+    /**
+     * Sets a listener for the OnTrigger event.
+     *
+     * @param listener The listener. There can be only one.
+     */
+    public void setOnTriggerListener(TraceListener listener)
+    {
+        onTrigger = listener;
     }
 
     /**
@@ -127,7 +211,7 @@ public class StateMachine
          * The OnExit action for the state, with default null implementation.
          * Can be overridden to provide a custom OnExit action.
          */
-        protected StateTransitionAction onExit = new StateTransitionAction()
+        protected StateTransitionAction onExit  = new StateTransitionAction()
         {
             @Override
             public void action()
@@ -143,6 +227,25 @@ public class StateMachine
         public State(String name)
         {
             this.name = name;
+        }
+
+        /**
+         * Creates a new state, with action methods for the ONEnter and OnExit actions.
+         * If either action is null, then the default null action is used.
+         *
+         * @param name    The name of the state (required; not null or empty).
+         * @param onEnter The action to be performed on entering this state (or null if none).
+         * @param onExit  The action to be performed on leaving this state (or null if none).
+         */
+        public State(String name, StateTransitionAction onEnter, StateTransitionAction onExit)
+        {
+            if (name.isEmpty())
+                throw new IllegalArgumentException("State name must not be empty or null");
+            this.name = name;
+            if (onEnter != null)
+                this.onEnter = onEnter;
+            if (onExit != null)
+                this.onExit = onExit;
         }
 
         /**
@@ -163,7 +266,7 @@ public class StateMachine
          */
         public class Transition implements ActionListener
         {
-            TransitionRule rule = new TransitionRule()
+            public TransitionRule rule = new TransitionRule()
             {
                 @Override
                 public boolean transitionIsAllowed()
@@ -215,12 +318,17 @@ public class StateMachine
                 // Triggers are only valid if the state machine is in the correct state, otherwise they are ignored.
                 if (StateMachine.this.currentState != State.this)
                 {
-                    // ToDo - print some diagnostics about the trigger being ignored.
+                    raiseOnTrigger(State.this.getName(), destinationState.getName(), "disarmed");
                     return;
                 }
 
                 if (rule.transitionIsAllowed())
+                {
+                    raiseOnTrigger(State.this.getName(), destinationState.getName(), "armed, executing");
                     StateMachine.this.transitionToNewState(State.this, destinationState);
+                }
+                else
+                    raiseOnTrigger(State.this.getName(), destinationState.getName(), "armed, rejected");
             }
 
             /**
